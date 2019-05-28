@@ -1,6 +1,14 @@
 #!/bin/sh
 
 # Based on https://github.com/mailcow/mailcow-dockerized/blob/master/data/Dockerfiles/acme/docker-entrypoint.sh
+restart_container(){
+  for container in $*; do
+    echo "Restarting ${container}..."
+    echo $(curl -X POST --insecure https://dockerapi/containers/${container}/restart | jq -r '.msg')
+  done
+}
+
+# Based on https://github.com/mailcow/mailcow-dockerized/blob/master/data/Dockerfiles/acme/docker-entrypoint.sh
 # Removed NGINX as Traefik is handling ssl termination
 reload_configurations(){
   # Reading container IDs
@@ -15,6 +23,7 @@ reload_configurations(){
   POSTFIX_RELOAD_RET=$(curl -X POST --insecure https://dockerapi/containers/${POSTFIX}/exec -d '{"cmd":"reload", "task":"postfix"}' --silent -H 'Content-type: application/json' | jq -r .type)
   [[ ${POSTFIX_RELOAD_RET} != 'success' ]] && { echo "Could not reload Postfix, restarting container..."; restart_container ${POSTFIX} ; }
 }
+
 
 # Initial extract
 python extract.py /acme.json ${MAILCOW_HOSTNAME} /ssl
