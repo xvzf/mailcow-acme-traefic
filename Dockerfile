@@ -1,9 +1,9 @@
 FROM python:3.7-alpine
 
-RUN apk add inotify-tools curl
+RUN apk add inotify-tools curl bash
 
 WORKDIR /app
 
 COPY . .
 
-ENTRYPOINT ["/bin/sh", "entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "entrypoint.sh"]

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Based on https://github.com/mailcow/mailcow-dockerized/blob/master/data/Dockerfiles/acme/docker-entrypoint.sh
 restart_container(){
